@@ -18,40 +18,29 @@ class RoleSeeder extends Seeder
     public function run()
     {
 
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        // app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         Permission::create(['name' => 'edit articles']);
         Permission::create(['name' => 'delete articles']);
         Permission::create(['name' => 'publish articles']);
         Permission::create(['name' => 'unpublish articles']);
 
-        $role1 = Role::create(['name' => 'teacher']);
+        $role1 = Role::create(['name' => 'admin']);
         $role1->givePermissionTo('edit articles');
         $role1->givePermissionTo('delete articles');
 
-        $role2 = Role::create(['name' => 'student']);
-        $role2->givePermissionTo('publish articles');
-        $role2->givePermissionTo('unpublish articles');
-
-        $role3 = Role::create(['name' => 'director']);
+        $role2 = Role::create(['name' => 'super-admin']);
 
         $user = User::factory()->create([
-            'email' => 'teacher@gmail.com',
-            'password' => 'password',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('password'),
         ]);
         $user->assignRole($role1);
 
         $user = User::factory()->create([
-            'email' => 'student@gmail.com',
-            'password' => 'password',
+            'email' => 'superadmin@gmail.com',
+            'password' => bcrypt('password'),
         ]);
         $user->assignRole($role2);
-
-        $user = User::factory()->create([
-            'email' => 'director@gmail.com',
-            'password' => 'password',
-        ]);
-        $user->assignRole($role2);
-        
     }
 }
