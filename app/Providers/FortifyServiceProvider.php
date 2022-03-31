@@ -38,6 +38,9 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::authenticateUsing(function (Request $request){
 
+            $user = User::where('status', '=', 1)->value('status');
+            dd($user); 
+            
             
         });
 
