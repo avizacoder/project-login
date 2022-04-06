@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::view('home', 'home');
+// Route::get('/users', [UserController::class, 'login'])->middleware('auth')->name('auth.login');
+// Route::post('/users', [UserController::class, 'store'])->middleware('auth')->name('auth.store');
+
+require_once __DIR__ . '/fortify.php';

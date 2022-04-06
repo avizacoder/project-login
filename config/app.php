@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------
@@ -176,6 +176,12 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        //fortify library
+        App\Providers\FortifyServiceProvider::class,
+
+        //laravel permission
+        Spatie\Permission\PermissionServiceProvider::class,
 
     ],
 
