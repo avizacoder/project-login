@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -18,7 +19,7 @@ class RoleSeeder extends Seeder
     public function run()
     {
 
-        // app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        //app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         Permission::create(['name' => 'edit articles']);
         Permission::create(['name' => 'delete articles']);
@@ -33,13 +34,11 @@ class RoleSeeder extends Seeder
 
         $user = User::factory()->create([
             'email' => 'admin@gmail.com',
-            'password' => bcrypt('password'),
         ]);
         $user->assignRole($role1);
 
         $user = User::factory()->create([
             'email' => 'superadmin@gmail.com',
-            'password' => bcrypt('password'),
         ]);
         $user->assignRole($role2);
     }

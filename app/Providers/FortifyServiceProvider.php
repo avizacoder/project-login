@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -24,7 +26,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Fortify::ignoreRoutes();
     }
 
     /**
@@ -34,22 +36,36 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Fortify::loginView('auth.login');
-
-        Fortify::authenticateUsing(function (Request $request){
-
-            $user = User::where('status', '=', 1)->value('status');
-            dd($user); 
-            
-            
-        });
-
+        Fortify::loginView('auth.login');   
 
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
+        Fortify::authenticateUsing(function(Request $request) {
+            
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+                $user = User::where('email', $request->email)->first();
+                if (!$user == $request->email) {
+                    throw ValidationException::withMessages([
+                        'email' => ['Este usuario no existe!!'],
+                    ]);
+                }elseif(! Hash::check($request->password, $user->password) ) {
+                    throw ValidationException::withMessages([
+                        'password' => ['La contraseña es incorrecta!!'],
+                    ]);
+                }elseif(! $user->status==1) {
+                    throw ValidationException::withMessages([
+                        'status' => ['Este usuario esta desactivo !!'],
+                    ]);
+                }
+                return $user;
+        });
+ 
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
 

@@ -1,12 +1,17 @@
+@if ($errors->any())
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+@endif
+
 <form action="{{ route('login') }}" method="POST">
     @csrf
-    <input type="email" id="email" name="email">
-    @error('email')
-        <div>{{ $message }}</div>  
-    @enderror
+    <input type="email" id="email" name="email" value="{{ old('email') }}">
+
     <input type="password" id="password" name="password">
-    @error('password')
-    <div>{{ $message }}</div>  
-    @enderror
+
     <input type="submit" value="Login">
 </form>
+
